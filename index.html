@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Romantic Quiz 💖</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #7f00ff, #e100ff);
+      font-family: Arial, sans-serif;
+      text-align: center;
+      color: white;
+    }
+    .box {
+      margin-top: 30px;
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 12px;
+      width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    h2 { color: #e91e63; }
+    button {
+      padding: 10px 20px;
+      margin: 8px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .yes { background: #4CAF50; color: white; }
+    .no { background: #f44336; color: white; }
+    .share { background: #25D366; color: white; }
+    .score { font-weight: bold; }
+    img {
+      width: 100%;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    input, select {
+      padding: 8px;
+      width: 90%;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .result-box {
+      display: none;
+      margin-top: 20px;
+      background: white;
+      color: black;
+      padding: 25px;
+      border-radius: 15px;
+      width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    .heart {
+      font-size: 40px;
+      color: red;
+      animation: beat 1s infinite;
+    }
+    @keyframes beat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🎵 Background Music -->
+  <audio autoplay loop>
+    <source src="romantic-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Quiz Screen -->
+  <div class="box" id="quizBox">
+    <h2>Dear Veenal 💖</h2>
+    <div class="score" id="score">Score: 0/8</div>
+    <h3 id="question">Will you be my Valentine? 💘</h3>
+
+    <form id="quizForm" action="https://formsubmit.co/rishishah0709@gmail.com" method="POST">
+      <!-- Image Question -->
+      <div id="imageBox" style="display:none;">
+        <img src="couple-photo.jpg" alt="Our Memory">
+
+        <select name="Place" id="placeInput" required>
+          <option value="">Where did we click this pic?</option>
+          <option value="Chawpati">Chawpati</option>
+          <option value="Juhu">Juhu</option>
+          <option value="Juhu Beach">Juhu Beach</option>
+        </select>
+
+        <select name="Year" id="yearInput" required>
+          <option value="">Select year</option>
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+
+        <!-- Hidden fields -->
+        <input type="hidden" name="Score" id="scoreField">
+        <input type="hidden" name="_subject" value="Romantic Quiz Result 💖">
+        <input type="hidden" name="_captcha" value="false">
+
+        <br>
+        <button type="submit" class="yes" onclick="prepareEmail()">Submit & Send Email 💌</button>
+      </div>
+    </form>
+
+    <div id="buttons">
+      <button class="yes" onclick="answer(true)">Yes</button>
+      <button class="no" onclick="answer(false)">No</button>
+    </div>
+
+    <div id="msg"></div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="result-box" id="resultBox">
+    <div class="heart">❤️</div>
+    <h2>Result 💖</h2>
+    <p id="finalMessage"></p>
+    <h3 id="finalScore"></h3>
+    <img src="couple-photo.jpg" alt="Our Memory">
+    <br>
+    <button class="share" onclick="shareOnWhatsApp()">Share on WhatsApp 🟢</button>
+  </div>
+
+  <script>
+    const questions = [
+      "Will you be my Valentine? 💖",
+      "Do you promise to stay with me forever? 🥰",
+      "Will you go on a coffee date with me? ☕",
+      "Do you love me more than chocolate? 🍫",
+      "Will you hold my hand even when I’m annoying? 😜",
+      "Do you believe we are soulmates? 💞",
+      "Will you choose me in every lifetime? 🌍",
+      "Where did we click this picture and in which year? 📸"
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function answer(isYes) {
+      if (!isYes) {
+        document.getElementById("msg").innerText = "❌ Invalid choice. Try again 😏";
+        return;
+      }
+      score++;
+      current++;
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      document.getElementById("score").innerText = "Score: " + score + "/" + questions.length;
+
+      if (current === questions.length - 1) {
+        document.getElementById("question").innerText = questions[current];
+        document.getElementById("buttons").style.display = "none";
+        document.getElementById("imageBox").style.display = "block";
+      } else {
+        document.getElementById("question").innerText = questions[current];
+      }
+    }
+
+    function prepareEmail() {
+      document.getElementById("scoreField").value = score + "/" + questions.length;
+      showResult();
+    }
+
+    function showResult() {
+      document.getElementById("quizBox").style.display = "none";
+      document.getElementById("resultBox").style.display = "block";
+
+      document.getElementById("finalScore").innerText =
+        "Your Score: " + score + " / " + questions.length;
+
+      if (score === questions.length) {
+        document.getElementById("finalMessage").innerText =
+          "Perfect score! You are truly my soulmate 💞";
+      } else if (score >= questions.length - 2) {
+        document.getElementById("finalMessage").innerText =
+          "Almost perfect! Our love is strong 💖";
+      } else {
+        document.getElementById("finalMessage").innerText =
+          "No worries! Love is about learning each other more 💕";
+      }
+    }
+
+    function shareOnWhatsApp() {
+      const text = "💖 I just completed this romantic quiz! My score: " +
+        score + "/" + questions.length + " 😍";
+      const url = window.location.href;
+      window.open("https://wa.me/?text=" + encodeURIComponent(text + " " + url), "_blank");
+    }
+  </script>
+
+</body>
+</html>
